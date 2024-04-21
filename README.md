@@ -29,4 +29,4 @@ $ symfony serve
 
 ### How to use
 
-Send a POST request to [http://localhost:8000/generateInsuranceCarrierRequestData](http://localhost:8000/generateInsuranceCarrierRequestData) including the input data within the request body as JSON. As a response the needed XML file to perform requests to the target insurance carrier is returned.
+Send a POST request to [http://localhost:8000/createThirdPartyRequest](http://localhost:8000/createThirdPartyRequest) including the input data within the request body as JSON. As a response the needed XML file to perform requests to the target insurance carrier is returned.
