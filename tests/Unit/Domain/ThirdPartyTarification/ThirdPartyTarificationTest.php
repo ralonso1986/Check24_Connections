@@ -6,6 +6,7 @@ use App\Connections\Domain\ThirdPartyEntity\FooEntity;
 use App\Connections\Domain\ThirdPartyTarification\ThirdPartyTarification;
 use App\Connections\Domain\ThirdPartyTarification\ValueObject\HolderVO;
 use App\Connections\Domain\ThirdPartyTarification\ValueObject\OccDriverVO;
+use App\Connections\Domain\ThirdPartyTarification\ValueObject\PrevInsContDateExpDateVO;
 use App\Connections\Domain\ThirdPartyTarification\ValueObject\PrevInsContDateVO;
 use App\Connections\Domain\ThirdPartyTarification\ValueObject\PrevInsExistsVO;
 use App\Connections\Domain\ThirdPartyTarification\ValueObject\PrevInsExpDateVO;
@@ -27,31 +28,28 @@ class ThirdPartyTarificationTest extends TestCase
         $holderVO = new HolderVO($holder);
         $occDriverVO = new OccDriverVO($occDriver);
         $prevInsExistsVO = new PrevInsExistsVO($prevInsExists);
-        $prevInsContrDateVO = new PrevInsContDateVO($prevInsContDate);
-        $prevInsExpDateVO = new PrevInsExpDateVO($prevInsExpDate);
+        $prevInsContrDateExpDateVO = new PrevInsContDateExpDateVO($prevInsContDate,$prevInsExpDate);
         $fooMapping = new FooEntity();
 
         $tPT = new ThirdPartyTarification(
             $holderVO,
             $occDriverVO,
             $prevInsExistsVO,
-            $prevInsContrDateVO,
-            $prevInsExpDateVO,
+            $prevInsContrDateExpDateVO,
             $fooMapping
         );
 
         $this->assertInstanceOf(HolderVO::class, $tPT->holder());
         $this->assertInstanceOf(OccDriverVO::class, $tPT->occDriver());
         $this->assertInstanceOf(PrevInsExistsVO::class, $tPT->prevInsExists());
-        $this->assertInstanceOf(PrevInsContDateVO::class, $tPT->prevInsContDate());
-        $this->assertInstanceOf(PrevInsExpDateVO::class, $tPT->prevInsExpDate());
+        $this->assertInstanceOf(PrevInsContDateExpDateVO::class, $tPT->prevInsContDateExpDate());
         //$this->assertInstanceOf(FooMapping::class, $tPT->thirdPartyMapping());
 
         $this->assertEquals($holder, (string) $tPT->holder());
         $this->assertEquals($occDriver, (string) $tPT->occDriver());
         $this->assertEquals($prevInsExists, (string) $tPT->prevInsExists());
-        $this->assertEquals($prevInsContDate, (string) $tPT->prevInsContDate());
-        $this->assertEquals($prevInsExpDate, (string) $tPT->prevInsExpDate());
+        $this->assertEquals($prevInsContDate, explode(",",(string) $tPT->prevInsContDateExpDate())[0]);
+        $this->assertEquals($prevInsExpDate, explode(",",(string) $tPT->prevInsContDateExpDate())[1]);
         $this->assertEquals($expected, $tPT->createThirdPartyRequest());
     }
 

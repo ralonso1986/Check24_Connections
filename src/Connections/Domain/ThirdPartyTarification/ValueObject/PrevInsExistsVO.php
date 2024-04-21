@@ -20,6 +20,10 @@ final class PrevInsExistsVO
         $this->value = strtoupper($value);
     }
 
+    public function prevInsExists(): bool {
+        return strtoupper($this->value) === "SI";
+    }
+
     public function __toString()
     {
         return $this->value;

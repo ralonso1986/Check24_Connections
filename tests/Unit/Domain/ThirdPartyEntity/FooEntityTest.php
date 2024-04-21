@@ -4,6 +4,9 @@ namespace App\Tests\Unit\Domain\ThirdPartyEntity;
 
 use App\Connections\Domain\Exception\WrongInputDataException;
 use App\Connections\Domain\ThirdPartyEntity\FooEntity;
+use App\Connections\Domain\ThirdPartyTarification\ValueObject\HolderVO;
+use App\Connections\Domain\ThirdPartyTarification\ValueObject\OccDriverVO;
+use App\Connections\Domain\ThirdPartyTarification\ValueObject\PrevInsExistsVO;
 use PHPUnit\Framework\TestCase;
 
 class FooEntityTest extends TestCase
@@ -23,8 +26,8 @@ class FooEntityTest extends TestCase
 
     public function mainDriverIsHolderDataProvider(): \Generator
     {
-        yield 'Conductor principal' => ["CONDUCTOR_PRINCIPAL", "YES"];
-        yield 'No es conductor principal' => ["PRIMO_CONDUCTOR", "NO"];
+        yield 'Conductor principal' => [new HolderVO("CONDUCTOR_PRINCIPAL"), "YES"];
+        yield 'No es conductor principal' => [new HolderVO("PRIMO_CONDUCTOR"), "NO"];
     }
 
     /**
@@ -40,10 +43,10 @@ class FooEntityTest extends TestCase
 
     public function holderIsUniqueDriverDataProvider(): \Generator
     {
-        yield 'Conductor único' => ["CONDUCTOR_PRINCIPAL", "NO", "YES"];
-        yield 'No es conductor único caso 1' => ["CONDUCTOR_PRINCIPAL", "SI", "NO"];
-        yield 'No es conductor único caso 2' => ["PRIMO DEL CONDUCTOR PRINCIPAL", "NO", "NO"];
-        yield 'No es conductor único caso 3' => ["PRIMO DEL CONDUCTOR PRINCIPAL", "SI", "NO"];
+        yield 'Conductor único' => [new HolderVO("CONDUCTOR_PRINCIPAL"), new OccDriverVO("NO"), "YES"];
+        yield 'No es conductor único caso 1' => [new HolderVO("CONDUCTOR_PRINCIPAL"), new OccDriverVO("SI"), "NO"];
+        yield 'No es conductor único caso 2' => [new HolderVO("PRIMO_PRINCIPAL"), new OccDriverVO("NO"), "NO"];
+        yield 'No es conductor único caso 3' => [new HolderVO("PRIMO_PRINCIPAL"), new OccDriverVO("SI"), "NO"];
     }
 
     public function testDateCot(): void
@@ -78,20 +81,16 @@ class FooEntityTest extends TestCase
 
     public function prevInsYearsDataProvider(): \Generator
     {
-        yield 'Sin seguro anterior' => ["NO", "", "", "0"];
+        yield 'Sin seguro anterior' => [new PrevInsExistsVO("NO"), "", "", "0"];
         yield 'Con seguro anterior pero sin contract date' => [
-            "SI", "", "2024-04-30",
+            new PrevInsExistsVO("SI"), "", "2024-04-30",
             WrongInputDataException::class
         ];
         yield 'Con seguro anterior pero sin expiration date' => [
-            "SI", "2024-04-30", "",
+            new PrevInsExistsVO("SI"), "2024-04-30", "",
             WrongInputDataException::class
         ];
-        yield 'Con seguro anterior pero expiration date anterior a contract date' => [
-            "SI", "2024-04-30", "2013-04-30",
-            WrongInputDataException::class
-        ];
-        yield 'Con seguro anterior y fechas correctas' => ["SI", "2020-04-30", "2024-04-30", "4"];
+        yield 'Con seguro anterior y fechas correctas' => [new PrevInsExistsVO("SI"), "2020-04-30", "2024-04-30", "4"];
     }
 
     /**
@@ -107,10 +106,10 @@ class FooEntityTest extends TestCase
 
     public function numAddiDriversDataProvider(): \Generator
     {
-        yield '0 conductores ocasionales' => ["CONDUCTOR_PRINCIPAL", "NO", "0"];
-        yield '1 conductor ocasional caso 1' => ["CONDUCTOR_PRINCIPAL", "SI", "1"];
-        yield '1 conductor ocasional caso 2' => ["PRIMO DEL CONDUCTOR PRINCIPAL", "NO", "1"];
-        yield '2 conductores ocasionales' => ["PRIMO DEL CONDUCTOR PRINCIPAL", "SI", "2"];
+        yield '0 conductores ocasionales' => [new HolderVO("CONDUCTOR_PRINCIPAL"), new OccDriverVO("NO"), "0"];
+        yield '1 conductor ocasional caso 1' => [new HolderVO("CONDUCTOR_PRINCIPAL"), new OccDriverVO("SI"), "1"];
+        yield '1 conductor ocasional caso 2' => [new HolderVO("PRIMO DEL CONDUCTOR PRINCIPAL"), new OccDriverVO("NO"), "1"];
+        yield '2 conductores ocasionales' => [new HolderVO("PRIMO DEL CONDUCTOR PRINCIPAL"), new OccDriverVO("SI"), "2"];
     }
 
     /**
@@ -138,11 +137,11 @@ class FooEntityTest extends TestCase
 
     public function prevInsInForceDataProvider(): \Generator
     {
-        yield 'Sin seguro anterior' => ["NO", "", "NO"];
+        yield 'Sin seguro anterior' => [new PrevInsExistsVO("NO"), "", "NO"];
         yield 'Con seguro anterior pero sin expiration date' => [
-            "SI", "", WrongInputDataException::class
+            new PrevInsExistsVO("SI"), "", WrongInputDataException::class
         ];
-        yield 'Con seguro anterior y expiration date anterior' => ["SI", "2022-04-30", "NO"];
-        yield 'Con seguro anterior y expiration date vigente' => ["SI", "2028-04-30", "YES"];
+        yield 'Con seguro anterior y expiration date anterior' => [new PrevInsExistsVO("SI"), "2022-04-30", "NO"];
+        yield 'Con seguro anterior y expiration date vigente' => [new PrevInsExistsVO("SI"), "2028-04-30", "YES"];
     }
 }

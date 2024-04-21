@@ -10,13 +10,19 @@ class HolderVOTest extends TestCase
 {
     public function testHolder(): void
     {
-        $testStringMandatory = new HolderVO("CONDUCTOR_PRINCIPAL");
-        $this->assertEquals("CONDUCTOR_PRINCIPAL", (string) $testStringMandatory);
+        $testHolderVO = new HolderVO("CONDUCTOR_PRINCIPAL");
+        $this->assertEquals("CONDUCTOR_PRINCIPAL", (string) $testHolderVO);
     }
 
     public function testEmptyData(): void
     {
         $this->expectException(EmptyInputDataException::class);
         $this->assertEmpty((string) new HolderVO(""));
+    }
+
+    public function testIsHolderMainDriver(): void
+    {
+        $testHolderVO = new HolderVO("CONDUCTOR_PRINCIPAL");
+        $this->assertTrue($testHolderVO->isHolderMainDriver());
     }
 }

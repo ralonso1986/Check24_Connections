@@ -11,7 +11,12 @@ final class HolderVO
     public function __construct(private string $value)
     {
         if (!$value)
-            throw new EmptyInputDataException('a not empty value for "holder" is required');
+            throw new EmptyInputDataException('a not empty value for holder is required');
+    }
+
+    public function isHolderMainDriver(): bool
+    {
+        return strtoupper($this->value) === "CONDUCTOR_PRINCIPAL";
     }
 
     public function __toString()

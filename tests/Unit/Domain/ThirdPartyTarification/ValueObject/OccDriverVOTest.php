@@ -8,18 +8,24 @@ use PHPUnit\Framework\TestCase;
 
 class OccDriverVOTest extends TestCase
 {
-    public function testYesOrNot(): void
+    public function testOccDriver(): void
     {
-        $testStringMandatory = new OccDriverVO("SI");
-        $this->assertEquals("SI", (string) $testStringMandatory);
+        $testOccDriver = new OccDriverVO("SI");
+        $this->assertEquals("SI", (string) $testOccDriver);
 
-        $testStringMandatory = new OccDriverVO("NO");
-        $this->assertEquals("NO", (string) $testStringMandatory);
+        $testOccDriver = new OccDriverVO("NO");
+        $this->assertEquals("NO", (string) $testOccDriver);
     }
 
     public function testWrongData(): void
     {
         $this->expectException(WrongInputDataException::class);
         $this->assertEmpty((string) new OccDriverVO("NOO"));
+    }
+
+    public function testIsOccDriver(): void
+    {
+        $testIsOccDriver = new OccDriverVO("SI");
+        $this->assertTrue($testIsOccDriver->isOccDriver());
     }
 }

@@ -8,13 +8,19 @@ use PHPUnit\Framework\TestCase;
 
 class PrevInsExistsVOTest extends TestCase
 {
-    public function testYesOrNot(): void
+    public function testPrevInsExists(): void
     {
-        $testStringMandatory = new PrevInsExistsVO("SI");
-        $this->assertEquals("SI", (string) $testStringMandatory);
+        $testPrevInsExists = new PrevInsExistsVO("SI");
+        $this->assertEquals("SI", (string) $testPrevInsExists);
 
-        $testStringMandatory = new PrevInsExistsVO("NO");
-        $this->assertEquals("NO", (string) $testStringMandatory);
+        $testPrevInsExists = new PrevInsExistsVO("NO");
+        $this->assertEquals("NO", (string) $testPrevInsExists);
+    }
+
+    public function testExists(): void
+    {
+        $testExists = new PrevInsExistsVO("SI");
+        $this->assertTrue($testExists->prevInsExists());
     }
 
     public function testWrongData(): void

@@ -15,9 +15,14 @@ final class OccDriverVO
     public function __construct(string $value)
     {
         if (!in_array(strtoupper($value), self::ALLOWED_VALUES))
-            throw new WrongInputDataException('"occasional driver" is required to be "SI" or "NO"');
+            throw new WrongInputDataException('occasional driver is required to be "SI" or "NO"');
 
         $this->value = strtoupper($value);
+    }
+
+    public function isOccDriver(): bool
+    {
+        return strtoupper($this->value) === "SI";
     }
 
     public function __toString()
