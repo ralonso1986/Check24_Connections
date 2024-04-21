@@ -1,0 +1,8 @@
+get_insurance_request_data:
+    path: /createThirdPartyRequest
+    methods: POST
+    controller: App\Connections\Infrastructure\Http\CreateThirdPartyRequestAction
+
+kernel:
+    resource: ../src/Kernel.php
+    type: annotation
